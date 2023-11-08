@@ -50,18 +50,38 @@ class Dashboard extends StatelessWidget {
           height: displayHeight,
           child: Stack(
             children: [
-              Positioned(top: 20, right: 40, child: Clock()),
-              Indicator(),
+              const Indicator(),
               Center(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    CarInfo(),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [Gears(), Speedometer(), Alert()],
+                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.1),
+                    SizedBox(
+                        width: MediaQuery.sizeOf(context).width * 0.25,
+                        child: const CarInfo()),
+                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.025),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.25,
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Alert(),
+                          Speedometer(),
+                          Gears(),
+                        ],
+                      ),
                     ),
-                    MediaInfo()
+                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.025),
+                    SizedBox(
+                        width: MediaQuery.sizeOf(context).width * 0.25,
+                        child: const Column(
+                          children: [
+                            SizedBox(height: 36),
+                            Clock(size: 20),
+                            SizedBox(height: 35),
+                            MediaInfo(),
+                          ],
+                        )),
+                    SizedBox(width: MediaQuery.sizeOf(context).width * 0.1),
                   ],
                 ),
               )

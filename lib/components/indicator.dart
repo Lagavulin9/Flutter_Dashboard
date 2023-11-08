@@ -9,6 +9,8 @@ class Indicator extends StatefulWidget {
 }
 
 class _IndicatorState extends State<Indicator> {
+  final double iconSize = 100;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -18,12 +20,18 @@ class _IndicatorState extends State<Indicator> {
           children: [
             Positioned(
                 left: 50,
-                top: displayHeight / 2 - 20,
-                child: Icon(Icons.arrow_left)),
+                top: (displayHeight - iconSize) / 2,
+                child: Icon(
+                  Icons.keyboard_arrow_left,
+                  size: iconSize,
+                )),
             Positioned(
                 right: 50,
-                top: displayHeight / 2 - 20,
-                child: Icon(Icons.arrow_right))
+                top: (displayHeight - iconSize) / 2,
+                child: Icon(
+                  Icons.keyboard_arrow_right,
+                  size: iconSize,
+                ))
           ],
         ));
   }

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Alert extends StatefulWidget {
@@ -13,9 +14,10 @@ class _AlertState extends State<Alert> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Icon(Icons.abc),
-        Icon(Icons.access_alarm),
-        Icon(Icons.access_time)
+        Icon(Icons.sensors_off),
+        Icon(Icons.battery_alert),
+        Icon(Icons.car_crash),
+        Icon(Icons.update_disabled)
       ],
     );
   }

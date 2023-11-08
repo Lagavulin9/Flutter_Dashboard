@@ -10,6 +10,18 @@ class Speedometer extends StatefulWidget {
 class _SpeedometerState extends State<Speedometer> {
   @override
   Widget build(BuildContext context) {
-    return Text("Speed");
+    return Column(
+      children: [
+        Text(
+          "100",
+          style: const TextStyle(fontSize: 100, fontWeight: FontWeight.bold),
+        ),
+        Text("m/min",
+            style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black54))
+      ],
+    );
   }
 }
