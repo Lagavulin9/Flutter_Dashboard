@@ -1,29 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dashboard/providers/control_provider.dart';
+import 'package:provider/provider.dart';
 
-class Gears extends StatefulWidget {
+class Gears extends StatelessWidget {
   const Gears({super.key});
 
   @override
-  State<Gears> createState() => _GearsState();
-}
-
-class _GearsState extends State<Gears> {
-  final List<String> gears = ["P", "R", "N", "D"];
-  final String selected = "P";
-
-  @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: gears.map((gear) {
-        return Text(
-          gear,
-          style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              color: gear == selected ? Colors.black : Colors.grey),
-        );
-      }).toList(),
+    return SizedBox(
+      width: 250,
+      child: Consumer<ControlModel>(
+        builder: (context, model, child) {
+          final List<String> _gears = ["P", "R", "N", "D"];
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: _gears.map((gear) {
+              if (gear == model.gear) {
+                return Text(
+                  gear,
+                  style: const TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              } else {
+                return Text(
+                  gear,
+                  style: Theme.of(context).textTheme.labelMedium,
+                );
+              }
+            }).toList(),
+          );
+        },
+      ),
     );
   }
 }

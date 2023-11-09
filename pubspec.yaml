@@ -38,6 +38,7 @@ dependencies:
   window_manager: ^0.3.7
   intl: ^0.18.1
   cupertino_battery_indicator: ^1.1.0
+  provider: ^6.1.0
 
 dev_dependencies:
   flutter_test:

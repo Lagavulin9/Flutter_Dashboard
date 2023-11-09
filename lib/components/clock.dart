@@ -19,9 +19,15 @@ class _ClockState extends State<Clock> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
     formatted = DateFormat("HH:mm").format(DateTime.now());
     timer = Timer.periodic(const Duration(seconds: 1), (timer) => updateTime());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   void updateTime() {
