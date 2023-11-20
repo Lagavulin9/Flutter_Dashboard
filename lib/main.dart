@@ -25,12 +25,13 @@ void main() async {
   await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = const WindowOptions(
-      size: Size(displayWidth, displayHeight),
-      center: true,
-      titleBarStyle: TitleBarStyle.hidden);
+    size: Size(displayWidth, displayHeight),
+    center: true,
+    // titleBarStyle: TitleBarStyle.hidden,
+  );
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
-    await windowManager.focus();
+    // await windowManager.focus();
   });
   runApp(const MyApp());
 }
