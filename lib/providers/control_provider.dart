@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dashboard/providers/commonAPI.dart';
 
 class ControlModel extends ChangeNotifier {
+  final CommonAPI bridge = CommonAPI();
   Timer? timer;
-  String _gear = "P";
-  String _indicator = "None";
+  Timer? blinkTimer;
+  late String _gear;
+  late String _indicator;
   bool _blink = false;
   bool _isTimerOn = false;
 
@@ -16,12 +19,12 @@ class ControlModel extends ChangeNotifier {
   void setIndicator(String indicator) {
     if (indicator != "None") {
       if (!_isTimerOn) {
-        timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+        blinkTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
           _blink = !_blink;
           notifyListeners();
         });
       } else {
-        timer?.cancel();
+        blinkTimer?.cancel();
         _blink = false;
         notifyListeners();
       }
@@ -29,5 +32,22 @@ class ControlModel extends ChangeNotifier {
     } else if (_isTimerOn) return;
     _indicator = indicator;
     debugPrint("$indicator, $_blink");
+  }
+
+  ControlModel() {
+    _gear = bridge.getGear();
+    _indicator = bridge.getIndicator();
+    timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      String newGear = bridge.getGear();
+      String newIndicator = bridge.getIndicator();
+      if (_gear != newGear) {
+        _gear = newGear;
+        notifyListeners();
+      }
+      if (_indicator != newIndicator) {
+        setIndicator(newIndicator);
+        notifyListeners();
+      }
+    });
   }
 }

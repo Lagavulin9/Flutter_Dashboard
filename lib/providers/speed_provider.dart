@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dashboard/providers/commonAPI.dart';
 
 class SpeedModel extends ChangeNotifier {
+  final CommonAPI bridge = CommonAPI();
   late Timer timer;
   late int _speed;
-  CommonAPI bridge = CommonAPI();
 
   int get speed => _speed;
 
