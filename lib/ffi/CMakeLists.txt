@@ -7,7 +7,7 @@ find_package(CommonAPI 3.2.0 REQUIRED)
 
 include_directories(
   ./include
-  /home/jinholee/dummie/src-gen/core
+  ../src-gen/core
   ${COMMONAPI_INCLUDE_DIRS}
 )
 
