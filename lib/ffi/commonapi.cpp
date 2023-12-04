@@ -1,5 +1,6 @@
 #define EXPORT extern "C" __attribute__((visibility("default"))) __attribute__((used))
 
+#include <atomic>
 #include <iostream>
 #include <thread>
 #include <mutex>
@@ -16,11 +17,11 @@ std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<SpeedSensorProxy
 std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<CarControlProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> ccProxy;
 std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<CarInfoProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> ciProxy;
 
-static int _speed;
-static std::string _gear;
-static v0::commonapi::CommonTypes::batteryStruct _carinfo;
-static std::string _indicator;
-static std::mutex _mutex;
+std::atomic<int> _speed;
+std::atomic<std::string> _gear;
+std::atomic<std::string> _indicator;
+v0::commonapi::CommonTypes::batteryStruct _carinfo;
+std::mutex _mutex;
 
 struct carinfo {
 	double vol;
@@ -84,10 +85,7 @@ void subscribe_speed()
 	std::cout << "Got attribute value: " << _speed << std::endl;
 	ssProxy->getSpeedAttribute().getChangedEvent().subscribe([&](const int& val){
 		//std::cout << "Received speed: " << val << std::endl;
-		{
-			std::lock_guard<std::mutex> lock(_mutex);
-			_speed = val;
-		}
+		_speed = val;
 	});
 	std::cout << "subscribed" << std::endl;
 }
@@ -106,10 +104,7 @@ void subscribe_control()
 	std::cout << "Got attribute value: " << _gear << std::endl;
 	ccProxy->getGearAttribute().getChangedEvent().subscribe([&](const std::string& val){
 		std::cout << "Received gear: " << val << std::endl;
-		{
-			std::lock_guard<std::mutex> lock(_mutex);
-			_gear = val;
-		}
+		_gear = val;
 	});
 	
 	ccProxy->getIndicatorAttribute().getValue(callStatus, _indicator, &info);
@@ -120,10 +115,7 @@ void subscribe_control()
 	std::cout << "Got attribute value: " << _indicator << std::endl;
 	ccProxy->getIndicatorAttribute().getChangedEvent().subscribe([&](const std::string& val){
 		std::cout << "Received indicator: " << val << std::endl;
-		{
-			std::lock_guard<std::mutex> lock(_mutex);
-			_indicator = val;
-		}
+		_indicator = val;
 	});
 	std::cout << "subscribed" << std::endl;
 }
@@ -156,21 +148,18 @@ void subscribe_info()
 EXPORT
 int getSpeed()
 {
-	std::lock_guard<std::mutex> lock(_mutex);
 	return _speed;
 }
 
 EXPORT
 const char* getGear()
 {
-	std::lock_guard<std::mutex> lock(_mutex);
 	return _gear.c_str();
 }
 
 EXPORT
 const char* getIndicator()
 {
-	std::lock_guard<std::mutex> lock(_mutex);
 	return _indicator.c_str();
 }
 
