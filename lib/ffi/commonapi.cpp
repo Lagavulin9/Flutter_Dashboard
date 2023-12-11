@@ -16,7 +16,7 @@ std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<SpeedSensorProxy
 std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<CarControlProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> ccProxy;
 std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<CarInfoProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> ciProxy;
 
-static int _speed;
+static unsigned int _speed;
 static std::string _gear;
 static v0::commonapi::CommonTypes::batteryStruct _carinfo;
 static std::string _indicator;
@@ -40,7 +40,7 @@ void init()
 	runtime = CommonAPI::Runtime::get();
 
 	std::string domain = "local";
-	std::string instance = "commonapi.SpeedSensor";
+	std::string instance = "SpeedSensor";
 	std::string connection = "client-sample";
 
 	ssProxy = runtime->buildProxyWithDefaultAttributeExtension<SpeedSensorProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
@@ -134,12 +134,12 @@ void subscribe_info()
 	CommonAPI::CallStatus callStatus;
 	CommonAPI::CallInfo info(1000);
 	info.sender_ = 5678;
-	ciProxy->getCar_infoAttribute().getValue(callStatus, _carinfo, &info);
+	ciProxy->getBatteryAttribute().getValue(callStatus, _carinfo, &info);
 	if (callStatus != CommonAPI::CallStatus::SUCCESS) {
 		std::cerr << "Remote call A failed!\n";
 		return;
 	}
-	ciProxy->getCar_infoAttribute().getChangedEvent().subscribe([&](const v0::commonapi::CommonTypes::batteryStruct& val){
+	ciProxy->getBatteryAttribute().getChangedEvent().subscribe([&](const v0::commonapi::CommonTypes::batteryStruct& val){
 			std::cout << "Received value->"
 			<< "vol: " << val.getVoltage()
 			<< ", cur: " << val.getCurrent()
