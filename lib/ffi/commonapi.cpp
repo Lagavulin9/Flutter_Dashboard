@@ -10,28 +10,32 @@
 #include <v0/commonapi/CarInfoProxy.hpp>
 #include <v0/commonapi/HeadUnitProxy.hpp>
 
-using namespace v0::commonapi;
-
 std::shared_ptr<CommonAPI::Runtime> runtime;
-std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<SpeedSensorProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> ssProxy;
-std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<CarControlProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> ccProxy;
-std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<CarInfoProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> ciProxy;
-std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<HeadUnitProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> huProxy;
+std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<v0::commonapi::SpeedSensorProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> ssProxy;
+std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<v0::commonapi::CarControlProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> ccProxy;
+std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<v0::commonapi::CarInfoProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> ciProxy;
+std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<v0::commonapi::HeadUnitProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> huProxy;
 
 static unsigned int _speed;
 static std::string _gear;
-static v0::commonapi::CommonTypes::batteryStruct _carinfo;
+static v0::commonapi::CarInfo::batteryStruct _carinfo;
 static std::string _indicator;
 static std::mutex _mutex;
 static bool _lightmode;
-static std::vector<uint8_t> _rawImage;
-static int _imageSize;
+static v0::commonapi::HeadUnit::MetaData _metadata;
 
 struct carinfo {
 	double vol;
 	double cur;
 	double pwr;
 	double bat;
+};
+
+struct metadata {
+	uint8_t* albumcover;
+	size_t image_size;
+	char* artist;
+	char* title;
 };
 
 EXPORT
@@ -48,7 +52,7 @@ void init()
 	std::string instance = "commonapi.SpeedSensor";
 	std::string connection = "client-sample";
 
-	ssProxy = runtime->buildProxyWithDefaultAttributeExtension<SpeedSensorProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
+	ssProxy = runtime->buildProxyWithDefaultAttributeExtension<v0::commonapi::SpeedSensorProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
 	std::cout << "Waiting for service to become available." << std::endl;
 	while (!ssProxy->isAvailable()) {
 		std::this_thread::sleep_for(std::chrono::microseconds(10));
@@ -57,7 +61,7 @@ void init()
 
 
 	instance = "commonapi.CarControl";
-	ccProxy = runtime->buildProxyWithDefaultAttributeExtension<CarControlProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
+	ccProxy = runtime->buildProxyWithDefaultAttributeExtension<v0::commonapi::CarControlProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
 	std::cout << "Waiting for service to become available." << std::endl;
 	while (!ccProxy->isAvailable()) {
 		std::this_thread::sleep_for(std::chrono::microseconds(10));
@@ -66,7 +70,7 @@ void init()
 
 
 	instance = "commonapi.CarInfo";
-	ciProxy = runtime->buildProxyWithDefaultAttributeExtension<CarInfoProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
+	ciProxy = runtime->buildProxyWithDefaultAttributeExtension<v0::commonapi::CarInfoProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
 	std::cout << "Waiting for service to become available." << std::endl;
 	while (!ciProxy->isAvailable()) {
 		std::this_thread::sleep_for(std::chrono::microseconds(10));
@@ -74,7 +78,7 @@ void init()
 	std::cout << "CarInfo service is available" << std::endl;
 
 	instance = "commonapi.HeadUnit";
-	huProxy = runtime->buildProxyWithDefaultAttributeExtension<HeadUnitProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
+	huProxy = runtime->buildProxyWithDefaultAttributeExtension<v0::commonapi::HeadUnitProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
 	std::cout << "Waiting for service to become available." << std::endl;
 	while (!huProxy->isAvailable()) {
 		std::this_thread::sleep_for(std::chrono::microseconds(10));
@@ -151,7 +155,7 @@ void subscribe_info()
 		std::cerr << "Remote call A failed!\n";
 		return;
 	}
-	ciProxy->getBatteryAttribute().getChangedEvent().subscribe([&](const v0::commonapi::CommonTypes::batteryStruct& val){
+	ciProxy->getBatteryAttribute().getChangedEvent().subscribe([&](const v0::commonapi::CarInfo::batteryStruct& val){
 			std::cout << "Received value->"
 			<< "vol: " << val.getVoltage()
 			<< ", cur: " << val.getCurrent()
@@ -181,16 +185,21 @@ void subscribe_theme()
 }
 
 EXPORT
-void subscribe_image()
+void subscribe_metadata()
 {
 	CommonAPI::CallStatus callStatus;
 	CommonAPI::CallInfo info(1000);
 	info.sender_ = 5678;
-	huProxy->getMediaImageAttribute().getChangedEvent().subscribe([&](const CommonAPI::ByteBuffer& val) {
-		std::cout << "New albumart" << std::endl;
+	huProxy->getMetadataAttribute().getValue(callStatus, _metadata, &info);
+	if (callStatus != CommonAPI::CallStatus::SUCCESS) {
+		std::cerr << "Remote call A failed!\n";
+		return;
+	}
+	huProxy->getMetadataAttribute().getChangedEvent().subscribe([&](const v0::commonapi::HeadUnit::MetaData& _val){
+		std::cout << "New metadata" << std::endl;
 		{
 			std::lock_guard<std::mutex> lock(_mutex);
-			_rawImage = val;
+			_metadata = _val;
 		}
 	});
 }
@@ -220,11 +229,12 @@ EXPORT
 carinfo getInfo()
 {
 	std::lock_guard<std::mutex> lock(_mutex);
-	carinfo ret = {_carinfo.getVoltage(),\
-				_carinfo.getCurrent(),\
-				_carinfo.getConsumption(),\
-				_carinfo.getLevel()\
-				};
+	carinfo ret = {
+		_carinfo.getVoltage(),\
+		_carinfo.getCurrent(),\
+		_carinfo.getConsumption(),\
+		_carinfo.getLevel()\
+	};
 	return ret;
 }
 
@@ -236,15 +246,14 @@ bool getLightMode()
 }
 
 EXPORT
-uint8_t* getImage()
+metadata getMetaData()
 {
 	std::lock_guard<std::mutex> lock(_mutex);
-	_imageSize = _rawImage.size();
-	return _rawImage.empty() ? nullptr : _rawImage.data();
-}
-
-EXPORT
-int getImageSize()
-{
-	return _imageSize;
+	metadata ret = {
+		(unsigned char*)_metadata.getAlbumcover().data(),
+		_metadata.getAlbumcover().size(),
+		(char*)_metadata.getArtist().c_str(),
+		(char*)_metadata.getTitle().c_str()
+	};
+	return ret;
 }

@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:typed_data';
 
+import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -13,26 +15,27 @@ class MediaModel extends ChangeNotifier {
     'assets/unknown-album.png',
     fit: BoxFit.cover,
   );
-  Uint8List prevBytes = Uint8List(0);
+  String _title = "Unknown Title";
+  String _artist = "Unknown Artist";
+  Uint8List _prevBytes = Uint8List(0);
 
   MediaModel() {
     timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
-      Uint8List rawBytes = bridge.getImage();
-      if (!listEquals(prevBytes, rawBytes)) {
-        _image = rawBytes.isEmpty
-            ? Image.asset(
-                'assets/unknown-album.png',
-                fit: BoxFit.cover,
-              )
-            : Image.memory(rawBytes);
-        prevBytes = rawBytes;
+      MetadataStruct newMeta = bridge.getMetaData();
+      Uint8List rawBytes = newMeta.albumcover.asTypedList(newMeta.imageSize);
+      String newArtist = newMeta.artist.toDartString();
+      String newTitle = newMeta.title.toDartString();
+      if (_artist != newArtist ||
+          _title != newTitle ||
+          !listEquals(_prevBytes, rawBytes)) {
+        _image = Image.memory(rawBytes);
+        _prevBytes = rawBytes;
+        _artist = newArtist;
+        _title = newTitle;
         notifyListeners();
       }
     });
   }
-
-  String _title = "We don't talk anymore";
-  String _artist = "Charlie Puth";
 
   Image get image => _image;
   String get title => _title;
