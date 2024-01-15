@@ -20,10 +20,12 @@ class CommonAPI {
   late final Function _subscribeSpeed;
   late final Function _subscribeControl;
   late final Function _subscribeInfo;
+  late final Function _subscribeTheme;
   late final Function getSpeed;
   late final Function _getGearUtf8;
   late final Function _getIndicatorUtf8;
   late final Function getInfo;
+  late final Function getLightMode;
 
   bool _initializeFFI() {
     libffi = DynamicLibrary.open("libffi.so");
@@ -39,6 +41,9 @@ class CommonAPI {
     _subscribeInfo = libffi
         .lookup<NativeFunction<Void Function()>>('subscribe_info')
         .asFunction<void Function()>();
+    _subscribeTheme = libffi
+        .lookup<NativeFunction<Void Function()>>('subscribe_theme')
+        .asFunction<void Function()>();
     getSpeed = libffi
         .lookup<NativeFunction<Int32 Function()>>('getSpeed')
         .asFunction<int Function()>();
@@ -51,6 +56,9 @@ class CommonAPI {
     getInfo = libffi
         .lookup<NativeFunction<InfoStruct Function()>>("getInfo")
         .asFunction<InfoStruct Function()>();
+    getLightMode = libffi
+        .lookup<NativeFunction<Bool Function()>>('getLightMode')
+        .asFunction<bool Function()>();
     return true;
   }
 
@@ -60,6 +68,7 @@ class CommonAPI {
     _subscribeSpeed();
     _subscribeControl();
     _subscribeInfo();
+    _subscribeTheme();
   }
 
   factory CommonAPI() {
