@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 
@@ -21,11 +22,14 @@ class CommonAPI {
   late final Function _subscribeControl;
   late final Function _subscribeInfo;
   late final Function _subscribeTheme;
+  late final Function _subscribeImage;
   late final Function getSpeed;
   late final Function _getGearUtf8;
   late final Function _getIndicatorUtf8;
   late final Function getInfo;
   late final Function getLightMode;
+  late final Function _getImage;
+  late final Function _getImageSize;
 
   bool _initializeFFI() {
     libffi = DynamicLibrary.open("libffi.so");
@@ -44,6 +48,9 @@ class CommonAPI {
     _subscribeTheme = libffi
         .lookup<NativeFunction<Void Function()>>('subscribe_theme')
         .asFunction<void Function()>();
+    _subscribeImage = libffi
+        .lookup<NativeFunction<Void Function()>>('subscribe_image')
+        .asFunction<void Function()>();
     getSpeed = libffi
         .lookup<NativeFunction<Int32 Function()>>('getSpeed')
         .asFunction<int Function()>();
@@ -59,6 +66,12 @@ class CommonAPI {
     getLightMode = libffi
         .lookup<NativeFunction<Bool Function()>>('getLightMode')
         .asFunction<bool Function()>();
+    _getImage = libffi
+        .lookup<NativeFunction<Pointer<Uint8> Function()>>('getImage')
+        .asFunction<Pointer<Uint8> Function()>();
+    _getImageSize = libffi
+        .lookup<NativeFunction<Int Function()>>('getImageSize')
+        .asFunction<int Function()>();
     return true;
   }
 
@@ -69,6 +82,7 @@ class CommonAPI {
     _subscribeControl();
     _subscribeInfo();
     _subscribeTheme();
+    _subscribeImage();
   }
 
   factory CommonAPI() {
@@ -83,5 +97,13 @@ class CommonAPI {
   String getIndicator() {
     Pointer<Utf8> raw = _getIndicatorUtf8();
     return raw.toDartString();
+  }
+
+  Uint8List getImage() {
+    Pointer<Uint8> rawImage = _getImage();
+    if (rawImage == nullptr) {
+      return Uint8List(0);
+    }
+    return rawImage.asTypedList(_getImageSize());
   }
 }

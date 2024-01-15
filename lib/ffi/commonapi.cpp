@@ -24,6 +24,8 @@ static v0::commonapi::CommonTypes::batteryStruct _carinfo;
 static std::string _indicator;
 static std::mutex _mutex;
 static bool _lightmode;
+static std::vector<uint8_t> _rawImage;
+static int _imageSize;
 
 struct carinfo {
 	double vol;
@@ -179,6 +181,21 @@ void subscribe_theme()
 }
 
 EXPORT
+void subscribe_image()
+{
+	CommonAPI::CallStatus callStatus;
+	CommonAPI::CallInfo info(1000);
+	info.sender_ = 5678;
+	huProxy->getMediaImageAttribute().getChangedEvent().subscribe([&](const CommonAPI::ByteBuffer& val) {
+		std::cout << "New albumart" << std::endl;
+		{
+			std::lock_guard<std::mutex> lock(_mutex);
+			_rawImage = val;
+		}
+	});
+}
+
+EXPORT
 int getSpeed()
 {
 	std::lock_guard<std::mutex> lock(_mutex);
@@ -216,4 +233,18 @@ bool getLightMode()
 {
 	std::lock_guard<std::mutex> lock(_mutex);
 	return _lightmode;
+}
+
+EXPORT
+uint8_t* getImage()
+{
+	std::lock_guard<std::mutex> lock(_mutex);
+	_imageSize = _rawImage.size();
+	return _rawImage.empty() ? nullptr : _rawImage.data();
+}
+
+EXPORT
+int getImageSize()
+{
+	return _imageSize;
 }
