@@ -3,7 +3,6 @@
 #endif
 
 #include <thread>
-#include <mutex>
 #include <iostream>
 #include <CommonAPI/CommonAPI.hpp>
 #include <CommonAPI/AttributeCacheExtension.hpp>
@@ -28,11 +27,7 @@ void buildSpeedSensorProxy()
 		std::this_thread::sleep_for(std::chrono::microseconds(10));
 	}
 	std::cout << "SpeedSensor service is available" << std::endl;
-}
 
-EXPORT 
-void subscribe_speed()
-{
 	// initialize value
 	CommonAPI::CallStatus callStatus;
 	CommonAPI::CallInfo info(1000);
@@ -45,13 +40,17 @@ void subscribe_speed()
 	}
 	std::cout << "Got attribute value: " << response << std::endl;
 	_speed = response;
+}
 
+EXPORT 
+void subscribe_speed()
+{
 	// subscribe and attatch callback function
 	ssProxy->getSpeedAttribute().getChangedEvent().subscribe([&](const int& val){
 		//std::cout << "Received speed: " << val << std::endl;
 		_speed = val;
 	});
-	std::cout << "subscribed" << std::endl;
+	std::cout << "SpeedSensor subscribed" << std::endl;
 }
 
 EXPORT
