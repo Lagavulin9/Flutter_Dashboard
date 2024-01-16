@@ -16,19 +16,15 @@ class MediaModel extends ChangeNotifier {
   );
   String _title = "Unknown Title";
   String _artist = "Unknown Artist";
-  Uint8List _prevBytes = Uint8List(0);
 
   MediaModel() {
-    timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
-      MetadataStruct newMeta = bridge.getMetaData();
-      Uint8List rawBytes = newMeta.albumcover.asTypedList(newMeta.imageSize);
-      String newArtist = newMeta.artist.toDartString();
-      String newTitle = newMeta.title.toDartString();
-      if (_artist != newArtist ||
-          _title != newTitle ||
-          !listEquals(_prevBytes, rawBytes)) {
+    timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      if (bridge.isMetaUpdated()) {
+        MetadataStruct newMeta = bridge.getMetaData();
+        Uint8List rawBytes = newMeta.albumcover.asTypedList(newMeta.imageSize);
+        String newArtist = newMeta.artist.toDartString();
+        String newTitle = newMeta.title.toDartString();
         _image = Image.memory(rawBytes);
-        _prevBytes = rawBytes;
         _artist = newArtist;
         _title = newTitle;
         notifyListeners();

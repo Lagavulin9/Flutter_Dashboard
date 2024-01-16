@@ -36,6 +36,7 @@ class CommonAPI {
   late final Function getInfo;
   late final Function getLightMode;
   late final Function getMetaData;
+  late final Function isMetaUpdated;
 
   bool _initializeFFI() {
     libffi = DynamicLibrary.open("libffi.so");
@@ -75,6 +76,9 @@ class CommonAPI {
     getMetaData = libffi
         .lookup<NativeFunction<MetadataStruct Function()>>('getMetaData')
         .asFunction<MetadataStruct Function()>();
+    isMetaUpdated = libffi
+        .lookup<NativeFunction<Bool Function()>>('isMetaUpdated')
+        .asFunction<bool Function()>();
     return true;
   }
 

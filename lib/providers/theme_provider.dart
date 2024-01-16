@@ -11,7 +11,7 @@ class ThemeModel extends ChangeNotifier {
   ThemeMode get mode => _mode;
 
   ThemeModel() {
-    timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+    timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       ThemeMode newMode =
           bridge.getLightMode() ? ThemeMode.light : ThemeMode.dark;
       if (newMode != _mode) {
