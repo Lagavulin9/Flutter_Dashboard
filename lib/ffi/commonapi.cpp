@@ -1,22 +1,22 @@
-#define EXPORT extern "C" __attribute__((visibility("default"))) __attribute__((used))
+#ifndef EXTERNC
+# define EXPORT extern "C" __attribute__((visibility("default"))) __attribute__((used))
+#endif
 
 #include <iostream>
 #include <thread>
 #include <mutex>
 #include <CommonAPI/CommonAPI.hpp>
 #include <CommonAPI/AttributeCacheExtension.hpp>
-#include <v0/commonapi/SpeedSensorProxy.hpp>
+
 #include <v0/commonapi/CarControlProxy.hpp>
 #include <v0/commonapi/CarInfoProxy.hpp>
 #include <v0/commonapi/HeadUnitProxy.hpp>
 
 std::shared_ptr<CommonAPI::Runtime> runtime;
-std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<v0::commonapi::SpeedSensorProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> ssProxy;
 std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<v0::commonapi::CarControlProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> ccProxy;
 std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<v0::commonapi::CarInfoProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> ciProxy;
 std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<v0::commonapi::HeadUnitProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> huProxy;
 
-static unsigned int _speed;
 static std::string _gear;
 static v0::commonapi::CarInfo::batteryStruct _carinfo;
 static std::string _indicator;
@@ -38,6 +38,8 @@ struct metadata {
 	char* title;
 };
 
+void buildSpeedSensorProxy(void);
+
 EXPORT
 void init()
 {
@@ -52,13 +54,7 @@ void init()
 	std::string instance = "commonapi.SpeedSensor";
 	std::string connection = "client-sample";
 
-	ssProxy = runtime->buildProxyWithDefaultAttributeExtension<v0::commonapi::SpeedSensorProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
-	std::cout << "Waiting for service to become available." << std::endl;
-	while (!ssProxy->isAvailable()) {
-		std::this_thread::sleep_for(std::chrono::microseconds(10));
-	}
-	std::cout << "SpeedSensor service is available" << std::endl;
-
+	buildSpeedSensorProxy();
 
 	instance = "commonapi.CarControl";
 	ccProxy = runtime->buildProxyWithDefaultAttributeExtension<v0::commonapi::CarControlProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
@@ -84,28 +80,6 @@ void init()
 		std::this_thread::sleep_for(std::chrono::microseconds(10));
 	}
 	std::cout << "HeadUnit service is available" << std::endl;
-}
-
-EXPORT
-void subscribe_speed()
-{
-	CommonAPI::CallStatus callStatus;
-	CommonAPI::CallInfo info(1000);
-	info.sender_ = 5678;
-	ssProxy->getSpeedAttribute().getValue(callStatus, _speed, &info);
-	if (callStatus != CommonAPI::CallStatus::SUCCESS) {
-		std::cerr << "Remote call A failed!\n";
-		return;
-	}
-	std::cout << "Got attribute value: " << _speed << std::endl;
-	ssProxy->getSpeedAttribute().getChangedEvent().subscribe([&](const int& val){
-		//std::cout << "Received speed: " << val << std::endl;
-		{
-			std::lock_guard<std::mutex> lock(_mutex);
-			_speed = val;
-		}
-	});
-	std::cout << "subscribed" << std::endl;
 }
 
 EXPORT
@@ -202,13 +176,6 @@ void subscribe_metadata()
 			_metadata = _val;
 		}
 	});
-}
-
-EXPORT
-int getSpeed()
-{
-	std::lock_guard<std::mutex> lock(_mutex);
-	return _speed;
 }
 
 EXPORT

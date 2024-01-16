@@ -20,5 +20,6 @@ include_directories(
 add_library(ffi
   SHARED
   commonapi.cpp
+  SpeedSensorProxy.cpp
 )
 target_link_libraries(ffi CommonAPI)
