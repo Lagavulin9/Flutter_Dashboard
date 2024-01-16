@@ -23,5 +23,6 @@ add_library(ffi
   SpeedSensorProxy.cpp
   CarControlProxy.cpp
   CarInfoProxy.cpp
+  HeadUnitProxy.cpp
 )
 target_link_libraries(ffi CommonAPI)
