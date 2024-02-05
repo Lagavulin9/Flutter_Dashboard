@@ -16,23 +16,10 @@ import 'package:flutter_dashboard/providers/media_provider.dart';
 import 'package:flutter_dashboard/providers/speed_provider.dart';
 import 'package:flutter_dashboard/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:window_manager/window_manager.dart';
 
 const double displayWidth = 1280;
 const double displayHeight = 400;
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
-
-  WindowOptions windowOptions = const WindowOptions(
-    size: Size(displayWidth, displayHeight),
-    center: true,
-    // titleBarStyle: TitleBarStyle.hidden,
-  );
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    // await windowManager.focus();
-  });
   runApp(const MyApp());
 }
 
@@ -52,7 +39,7 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<ThemeModel>(
         builder: (context, model, child) => MaterialApp(
-          title: 'Flutter Demo',
+          title: 'Dashboard',
           theme: ThemeData(
             colorScheme: const ColorScheme.light(
                 background: Color.fromRGBO(0xe1, 0xe1, 0xe1, 1)),
@@ -85,33 +72,12 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          IconButton(
-              icon: Icon(Icons.arrow_left),
-              onPressed: () => Provider.of<ControlModel>(context, listen: false)
-                  .setIndicator("Left")),
-          IconButton(
-              icon: Icon(Icons.arrow_upward),
-              onPressed: () => Provider.of<ControlModel>(context, listen: false)
-                  .setIndicator("None")),
-          IconButton(
-              icon: Icon(Icons.arrow_right),
-              onPressed: () => Provider.of<ControlModel>(context, listen: false)
-                  .setIndicator("Right")),
-          IconButton(
-              icon: Icon(Icons.dark_mode),
-              onPressed: () => Provider.of<ThemeModel>(context, listen: false)
-                  .toggleTheme()),
-        ],
-      ),
       body: SizedBox(
           width: displayWidth,
           height: displayHeight,
           child: Stack(
             children: [
-              Indicator(),
+              const Indicator(),
               Center(
                 child: SizedBox(
                     width: displayWidth * 0.85,
