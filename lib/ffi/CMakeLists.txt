@@ -17,7 +17,7 @@ include_directories(
   ${COMMONAPI_INCLUDE_DIRS}
 )
 
-add_library(ffi
+add_library(myffi
   SHARED
   commonapi.cpp
   SpeedSensorProxy.cpp
@@ -25,4 +25,4 @@ add_library(ffi
   CarInfoProxy.cpp
   HeadUnitProxy.cpp
 )
-target_link_libraries(ffi CommonAPI)
+target_link_libraries(myffi CommonAPI)

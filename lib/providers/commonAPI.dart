@@ -39,7 +39,7 @@ class CommonAPI {
   late final Function isMetaUpdated;
 
   bool _initializeFFI() {
-    libffi = DynamicLibrary.open("libffi.so");
+    libffi = DynamicLibrary.open("libmyffi.so");
     _init = libffi
         .lookup<NativeFunction<Void Function()>>('init')
         .asFunction<void Function()>();
