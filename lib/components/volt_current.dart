@@ -12,7 +12,7 @@ class VolCur extends StatelessWidget {
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text(
           model.volt.toStringAsFixed(1),
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const Text(
           " V",
@@ -21,7 +21,7 @@ class VolCur extends StatelessWidget {
         const SizedBox(width: 20),
         Text(
           model.current.toStringAsFixed(1),
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const Text(
           " mA",

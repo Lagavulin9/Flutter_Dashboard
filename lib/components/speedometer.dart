@@ -13,9 +13,9 @@ class Speedometer extends StatelessWidget {
         children: [
           Text(
             "${model.speed}",
-            style: TextStyle(fontSize: 100, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 100, fontWeight: FontWeight.bold),
           ),
-          Text(
+          const Text(
             "m/min",
             style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
           )

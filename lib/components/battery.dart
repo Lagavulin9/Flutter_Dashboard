@@ -19,7 +19,7 @@ class Battery extends StatelessWidget {
           const SizedBox(width: 16),
           Text(
             "${(carInfo.battery * 100).round()}%",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           )
         ],
       ),

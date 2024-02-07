@@ -13,9 +13,9 @@ class Power extends StatelessWidget {
         children: [
           Text(
             "${model.power.round()}",
-            style: TextStyle(fontSize: 100, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 100, fontWeight: FontWeight.bold),
           ),
-          Text(
+          const Text(
             "W",
             style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
           )
