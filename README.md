@@ -4,6 +4,7 @@ Flutter was used to implement front end application.
 It uses CommonAPI and SOME/IP binding as IPC
 
 # Features
+![Layout](https://github.com/Lagavulin9/Flutter_Dashboard/assets/56917072/95fc10e5-9fd5-413b-a226-866745ec84d1)
 - Speedometer
 - Current Gear
 - Battery Info
