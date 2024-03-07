@@ -7,6 +7,7 @@ import 'package:flutter_dashboard/components/gears.dart';
 import 'package:flutter_dashboard/components/indicator.dart';
 import 'package:flutter_dashboard/components/media_info.dart';
 import 'package:flutter_dashboard/components/power.dart';
+import 'package:flutter_dashboard/components/sonar_view.dart';
 import 'package:flutter_dashboard/components/speedometer.dart';
 import 'package:flutter_dashboard/components/volt_current.dart';
 import 'package:flutter_dashboard/providers/alert_provider.dart';
@@ -108,7 +109,7 @@ class Dashboard extends StatelessWidget {
                                   child: Consumer<SonarModel>(
                                       builder: (context, model, child) =>
                                           model.tooClose
-                                              ? Container(color: Colors.amber)
+                                              ? SonarView(model: model)
                                               : const AlbumCover())))
                         ]),
                         const TableRow(children: [
