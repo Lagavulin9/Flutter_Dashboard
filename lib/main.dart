@@ -13,6 +13,7 @@ import 'package:flutter_dashboard/providers/alert_provider.dart';
 import 'package:flutter_dashboard/providers/car_info_provider.dart';
 import 'package:flutter_dashboard/providers/control_provider.dart';
 import 'package:flutter_dashboard/providers/media_provider.dart';
+import 'package:flutter_dashboard/providers/sonar_provider.dart';
 import 'package:flutter_dashboard/providers/speed_provider.dart';
 import 'package:flutter_dashboard/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +36,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ControlModel()),
         ChangeNotifierProvider(create: (context) => MediaModel()),
         ChangeNotifierProvider(create: (context) => AlertModel()),
-        ChangeNotifierProvider(create: (context) => ThemeModel())
+        ChangeNotifierProvider(create: (context) => ThemeModel()),
+        ChangeNotifierProvider(create: (context) => SonarModel())
       ],
       child: Consumer<ThemeModel>(
         builder: (context, model, child) => MaterialApp(
@@ -83,26 +85,33 @@ class Dashboard extends StatelessWidget {
                     width: displayWidth * 0.85,
                     height: displayHeight,
                     child: Table(
-                      children: const [
-                        TableRow(children: [
+                      children: [
+                        const TableRow(children: [
                           SizedBox(height: 25),
                           SizedBox(height: 25),
                           SizedBox(height: 25)
                         ]),
-                        TableRow(children: [
+                        const TableRow(children: [
                           SizedBox(height: 40, child: Center(child: Battery())),
                           SizedBox(height: 40, child: Center(child: Alert())),
                           SizedBox(
                               height: 40, child: Center(child: Clock(size: 22)))
                         ]),
                         TableRow(children: [
-                          SizedBox(height: 240, child: Center(child: Power())),
-                          SizedBox(
+                          const SizedBox(
+                              height: 240, child: Center(child: Power())),
+                          const SizedBox(
                               height: 240, child: Center(child: Speedometer())),
                           SizedBox(
-                              height: 240, child: Center(child: AlbumCover()))
+                              height: 240,
+                              child: Center(
+                                  child: Consumer<SonarModel>(
+                                      builder: (context, model, child) =>
+                                          model.tooClose
+                                              ? Container(color: Colors.amber)
+                                              : const AlbumCover())))
                         ]),
-                        TableRow(children: [
+                        const TableRow(children: [
                           SizedBox(height: 50, child: Center(child: VolCur())),
                           SizedBox(height: 50, child: Center(child: Gears())),
                           SizedBox(

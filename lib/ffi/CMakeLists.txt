@@ -11,6 +11,7 @@ find_package(CarInfo-someip REQUIRED)
 include_directories(
   ./include
   /home/jinholee/Flutter_Head-Unit/lib/ffi/src-gen/core
+  /home/jinholee/DummyAPI/cf/src-gen/core
   ${CARINFO_INCLUDE_DIRS}
   ${CARCONTROL_INCLUDE_DIRS}
   ${CANRECEIVER_INCLUDE_DIRS}
@@ -24,5 +25,6 @@ add_library(myffi
   CarControlProxy.cpp
   CarInfoProxy.cpp
   HeadUnitProxy.cpp
+  ParkDistanceControlProxy.cpp
 )
 target_link_libraries(myffi CommonAPI)

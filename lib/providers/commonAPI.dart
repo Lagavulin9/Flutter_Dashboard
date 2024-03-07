@@ -21,6 +21,15 @@ final class MetadataStruct extends Struct {
   external Pointer<Utf8> title;
 }
 
+final class SonarStruct extends Struct {
+  @Uint32()
+  external int left;
+  @Uint32()
+  external int middle;
+  @Uint32()
+  external int right;
+}
+
 class CommonAPI {
   static final CommonAPI _instance = CommonAPI._privateConstructor();
   late final DynamicLibrary libffi;
@@ -30,12 +39,14 @@ class CommonAPI {
   late final Function _subscribeInfo;
   late final Function _subscribeTheme;
   late final Function _subscribeMetadata;
+  late final Function _subscribePDC;
   late final Function getSpeed;
   late final Function _getGearUtf8;
   late final Function _getIndicatorUtf8;
   late final Function getInfo;
   late final Function getLightMode;
   late final Function getMetaData;
+  late final Function getSonar;
   late final Function isMetaUpdated;
 
   bool _initializeFFI() {
@@ -58,6 +69,9 @@ class CommonAPI {
     _subscribeMetadata = libffi
         .lookup<NativeFunction<Void Function()>>('subscribe_metadata')
         .asFunction<void Function()>();
+    _subscribePDC = libffi
+        .lookup<NativeFunction<Void Function()>>('subscribe_pdc')
+        .asFunction<void Function()>();
     getSpeed = libffi
         .lookup<NativeFunction<Int32 Function()>>('getSpeed')
         .asFunction<int Function()>();
@@ -76,6 +90,9 @@ class CommonAPI {
     getMetaData = libffi
         .lookup<NativeFunction<MetadataStruct Function()>>('getMetaData')
         .asFunction<MetadataStruct Function()>();
+    getSonar = libffi
+        .lookup<NativeFunction<SonarStruct Function()>>('getSonar')
+        .asFunction<SonarStruct Function()>();
     isMetaUpdated = libffi
         .lookup<NativeFunction<Bool Function()>>('isMetaUpdated')
         .asFunction<bool Function()>();
@@ -90,6 +107,7 @@ class CommonAPI {
     _subscribeInfo();
     _subscribeTheme();
     _subscribeMetadata();
+    _subscribePDC();
   }
 
   factory CommonAPI() {

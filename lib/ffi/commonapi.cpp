@@ -14,6 +14,7 @@ void buildSpeedSensorProxy(void);
 void buildCarControlProxy(void);
 void buildCarInfoProxy(void);
 void buildHeadUnitProxy(void);
+void buildPDCProxy(void);
 
 EXPORT
 void init()
@@ -30,4 +31,6 @@ void init()
 	buildCarInfoProxy();
 
 	buildHeadUnitProxy();
+
+	buildPDCProxy();
 }
