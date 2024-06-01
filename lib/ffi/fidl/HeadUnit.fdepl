@@ -1,0 +1,35 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-4-SOMEIP_deployment_spec.fdepl"
+import "HeadUnit.fidl"
+
+define org.genivi.commonapi.someip.deployment for interface commonapi.HeadUnit {
+
+    SomeIpServiceID = 6000
+
+    attribute lightMode {
+        SomeIpNotifierEventGroups = { 6100 }
+        SomeIpNotifierID = 61000
+        SomeIpGetterID = 6101
+        SomeIpAttributeReliable = true
+    }
+
+    attribute unit {
+        SomeIpNotifierEventGroups = { 6200 }
+        SomeIpNotifierID = 62000
+        SomeIpGetterID = 6201
+        SomeIpAttributeReliable = true
+    }
+
+    attribute metadata {
+        SomeIpNotifierEventGroups = { 6300 }
+        SomeIpNotifierID = 63000
+        SomeIpGetterID = 6301
+        SomeIpAttributeReliable = true
+    }
+}
+
+define org.genivi.commonapi.someip.deployment for provider as Service {
+    instance commonapi.HeadUnit{
+        InstanceId = "commonapi.HeadUnit"
+        SomeIpInstanceID = 6001
+    }
+}

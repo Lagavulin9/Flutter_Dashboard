@@ -1,0 +1,15 @@
+package commonapi
+
+interface HeadUnit {
+    version { major 0 minor 1 }
+
+    attribute Boolean lightMode readonly
+    attribute String unit readonly
+    attribute MetaData metadata readonly
+
+    struct MetaData {
+        UInt8[] albumcover
+        String artist
+        String title
+    }
+}
