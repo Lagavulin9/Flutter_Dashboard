@@ -9,10 +9,9 @@ class SonarModel extends ChangeNotifier {
   int limit = 10;
   Timer? timer;
 
-  int get left => _sonar.left;
-  int get middle => _sonar.middle;
-  int get right => _sonar.right;
-  bool get tooClose => (left <= limit) || (middle <= limit) || (right <= limit);
+  int get front => _sonar.front;
+  int get rear => _sonar.rear;
+  bool get tooClose => (front <= limit) || (rear <= limit);
 
   SonarModel() {
     SonarStruct sonar = bridge.getSonar();
