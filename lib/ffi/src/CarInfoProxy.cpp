@@ -30,20 +30,20 @@ void buildCarInfoProxy()
 	std::string connection = "client-sample";
 
 	ciProxy = runtime->buildProxyWithDefaultAttributeExtension<v0::commonapi::CarInfoProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
-	std::cout << "Waiting for service to become available." << std::endl;
-	while (!ciProxy->isAvailable()) {
-		std::this_thread::sleep_for(std::chrono::microseconds(10));
-	}
-	std::cout << "CarInfo service is available" << std::endl;
+	// std::cout << "Waiting for service to become available." << std::endl;
+	// while (!ciProxy->isAvailable()) {
+	// 	std::this_thread::sleep_for(std::chrono::microseconds(10));
+	// }
+	// std::cout << "CarInfo service is available" << std::endl;
 
-	CommonAPI::CallStatus callStatus;
-	CommonAPI::CallInfo info(1000);
-	info.sender_ = 5678;
-	ciProxy->getBatteryAttribute().getValue(callStatus, _carinfo, &info);
-	if (callStatus != CommonAPI::CallStatus::SUCCESS) {
-		std::cerr << "Remote call A failed!\n";
-		return;
-	}
+	// CommonAPI::CallStatus callStatus;
+	// CommonAPI::CallInfo info(1000);
+	// info.sender_ = 5678;
+	// ciProxy->getBatteryAttribute().getValue(callStatus, _carinfo, &info);
+	// if (callStatus != CommonAPI::CallStatus::SUCCESS) {
+	// 	std::cerr << "Remote call A failed!\n";
+	// 	return;
+	// }
 }
 
 EXPORT

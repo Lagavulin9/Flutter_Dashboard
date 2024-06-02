@@ -32,31 +32,31 @@ void buildHeadUnitProxy()
 	std::string connection = "client-sample";
 
 	huProxy = runtime->buildProxyWithDefaultAttributeExtension<HeadUnitProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
-	std::cout << "Waiting for service to become available." << std::endl;
-	while (!huProxy->isAvailable()) {
-		std::this_thread::sleep_for(std::chrono::microseconds(10));
-	}
-	std::cout << "HeadUnit service is available" << std::endl;
+	// std::cout << "Waiting for service to become available." << std::endl;
+	// while (!huProxy->isAvailable()) {
+	// 	std::this_thread::sleep_for(std::chrono::microseconds(10));
+	// }
+	// std::cout << "HeadUnit service is available" << std::endl;
 
 	// initialize value
-	CommonAPI::CallStatus callStatus;
-	CommonAPI::CallInfo info(1000);
-	info.sender_ = 5678;
+	// CommonAPI::CallStatus callStatus;
+	// CommonAPI::CallInfo info(1000);
+	// info.sender_ = 5678;
 
-	bool response;
-	huProxy->getLightModeAttribute().getValue(callStatus, response, &info);
-	if (callStatus != CommonAPI::CallStatus::SUCCESS) {
-		std::cerr << "Remote call A failed!\n";
-		return;
-	}
-	std::cout << "Got attribute value: " << response << std::endl;
-	_lightmode = response;
+	// bool response;
+	// huProxy->getLightModeAttribute().getValue(callStatus, response, &info);
+	// if (callStatus != CommonAPI::CallStatus::SUCCESS) {
+	// 	std::cerr << "Remote call A failed!\n";
+	// 	return;
+	// }
+	// std::cout << "Got attribute value: " << response << std::endl;
+	// _lightmode = response;
 
-	huProxy->getMetadataAttribute().getValue(callStatus, _metadata, &info);
-	if (callStatus != CommonAPI::CallStatus::SUCCESS) {
-		std::cerr << "Remote call A failed!\n";
-		return;
-	}
+	// huProxy->getMetadataAttribute().getValue(callStatus, _metadata, &info);
+	// if (callStatus != CommonAPI::CallStatus::SUCCESS) {
+	// 	std::cerr << "Remote call A failed!\n";
+	// 	return;
+	// }
 }
 
 EXPORT

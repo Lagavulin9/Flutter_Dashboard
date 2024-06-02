@@ -27,7 +27,7 @@ void buildCanTransceiverProxy()
 	std::shared_ptr<CommonAPI::Runtime> runtime = CommonAPI::Runtime::get();
 
 	std::string domain = "local";
-	std::string instance = "commonapi.CanTrasceiver";
+	std::string instance = "commonapi.CanTransceiver";
 	std::string connection = "client-sample";
 
 	canProxy = runtime->buildProxyWithDefaultAttributeExtension<CanTransceiverProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
@@ -35,20 +35,20 @@ void buildCanTransceiverProxy()
 	// while (!canProxy->isAvailable()) {
 	// 	std::this_thread::sleep_for(std::chrono::microseconds(10));
 	// }
-	// std::cout << "CanTrasceiver service is available" << std::endl;
+	// std::cout << "CanTrasnceiver service is available" << std::endl;
 
 	// initialize value
-	CommonAPI::CallStatus callStatus;
-	CommonAPI::CallInfo info(1000);
-	info.sender_ = 5678;
-	unsigned int response;
-	canProxy->getSpeedAttribute().getValue(callStatus, response, &info);
-	if (callStatus != CommonAPI::CallStatus::SUCCESS) {
-		std::cerr << "Remote call A failed!\n";
-		return;
-	}
-	std::cout << "Got attribute value: " << response << std::endl;
-	_speed = response;
+	// CommonAPI::CallStatus callStatus;
+	// CommonAPI::CallInfo info(1000);
+	// info.sender_ = 5678;
+	// unsigned int response;
+	// canProxy->getSpeedAttribute().getValue(callStatus, response, &info);
+	// if (callStatus != CommonAPI::CallStatus::SUCCESS) {
+	// 	std::cerr << "Remote call A failed!\n";
+	// 	return;
+	// }
+	// std::cout << "Got attribute value: " << response << std::endl;
+	// _speed = response;
 }
 
 EXPORT 
@@ -59,7 +59,7 @@ void subscribe_speed()
 		//std::cout << "Received speed: " << val << std::endl;
 		_speed = val;
 	});
-	std::cout << "CanTrasceiver Speed subscribed" << std::endl;
+	std::cout << "CanTransceiver Speed subscribed" << std::endl;
 }
 
 EXPORT
@@ -74,7 +74,7 @@ void subscribe_sonar()
 		//std::cout << "Received sonar rear: " << val << std::endl;
 		_rearSonar = val;
 	});
-	std::cout << "CanTrasceiver Sonar subscribed" << std::endl;
+	std::cout << "CanTransceiver Sonar subscribed" << std::endl;
 }
 
 EXPORT

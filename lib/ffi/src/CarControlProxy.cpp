@@ -33,23 +33,23 @@ void buildCarControlProxy()
 	// std::cout << "CarControl service is available" << std::endl;
 
 	// initialize values
-	CommonAPI::CallStatus callStatus;
-	CommonAPI::CallInfo info(1000);
-	info.sender_ = 5678;
+	// CommonAPI::CallStatus callStatus;
+	// CommonAPI::CallInfo info(1000);
+	// info.sender_ = 5678;
 
-	ccProxy->getGearAttribute().getValue(callStatus, _gear, &info);
-	if (callStatus != CommonAPI::CallStatus::SUCCESS) {
-		std::cerr << "Remote call A failed!\n";
-		return;
-	}
-	std::cout << "Got attribute value: " << _gear << std::endl;
+	// ccProxy->getGearAttribute().getValue(callStatus, _gear, &info);
+	// if (callStatus != CommonAPI::CallStatus::SUCCESS) {
+	// 	std::cerr << "Remote call A failed!\n";
+	// 	return;
+	// }
+	// std::cout << "Got attribute value: " << _gear << std::endl;
 
-	ccProxy->getIndicatorAttribute().getValue(callStatus, _indicator, &info);
-	if (callStatus != CommonAPI::CallStatus::SUCCESS) {
-		std::cerr << "Remote call A failed!\n";
-		return;
-	}
-	std::cout << "Got attribute value: " << _indicator << std::endl;
+	// ccProxy->getIndicatorAttribute().getValue(callStatus, _indicator, &info);
+	// if (callStatus != CommonAPI::CallStatus::SUCCESS) {
+	// 	std::cerr << "Remote call A failed!\n";
+	// 	return;
+	// }
+	// std::cout << "Got attribute value: " << _indicator << std::endl;
 }
 
 EXPORT
