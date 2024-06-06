@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dashboard/components/album_cover.dart';
 import 'package:flutter_dashboard/components/alerts.dart';
+import 'package:flutter_dashboard/components/arc_painter.dart';
 import 'package:flutter_dashboard/components/battery.dart';
 import 'package:flutter_dashboard/components/clock.dart';
 import 'package:flutter_dashboard/components/gears.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_dashboard/providers/sonar_provider.dart';
 import 'package:flutter_dashboard/providers/speed_provider.dart';
 import 'package:flutter_dashboard/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'dart:math' as math;
 
 const double displayWidth = 1280;
 const double displayHeight = 400;
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MediaModel()),
         ChangeNotifierProvider(create: (context) => AlertModel()),
         ChangeNotifierProvider(create: (context) => ThemeModel()),
-        // ChangeNotifierProvider(create: (context) => SonarModel())
+        ChangeNotifierProvider(create: (context) => SonarModel())
       ],
       child: Consumer<ThemeModel>(
         builder: (context, model, child) => MaterialApp(
@@ -105,13 +107,16 @@ class Dashboard extends StatelessWidget {
                               height: 240, child: Center(child: Speedometer())),
                           SizedBox(
                               height: 240,
-                              child: Center(child: const AlbumCover()))
-                          // child: Center(
-                          //     child: Consumer<SonarModel>(
-                          //         builder: (context, model, child) =>
-                          //             model.tooClose
-                          //                 ? SonarView(model: model)
-                          //                 : const AlbumCover())))
+                              child: Center(
+                                  child: Consumer2<SonarModel, ControlModel>(
+                                builder: (context, sonar, control, child) =>
+                                    // TODO: need to set priorities of showing widgets
+                                    sonar.tooClose
+                                        ? SonarView(
+                                            sonarModel: sonar,
+                                            controlModel: control)
+                                        : const AlbumCover(),
+                              )))
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 50, child: Center(child: VolCur())),
