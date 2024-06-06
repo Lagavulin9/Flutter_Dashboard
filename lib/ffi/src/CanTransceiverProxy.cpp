@@ -67,11 +67,11 @@ void subscribe_sonar()
 {
 	// subscribe and attatch callback function
 	canProxy->getSonarFrontAttribute().getChangedEvent().subscribe([&](const int& val){
-		//std::cout << "Received sonar front: " << val << std::endl;
+		// std::cout << "Received sonar front: " << val << std::endl;
 		_frontSonar = val;
 	});
 	canProxy->getSonarRearAttribute().getChangedEvent().subscribe([&](const int& val){
-		//std::cout << "Received sonar rear: " << val << std::endl;
+		// std::cout << "Received sonar rear: " << val << std::endl;
 		_rearSonar = val;
 	});
 	std::cout << "CanTransceiver Sonar subscribed" << std::endl;

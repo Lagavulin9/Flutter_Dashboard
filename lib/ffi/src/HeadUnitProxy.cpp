@@ -13,7 +13,7 @@ using namespace v0::commonapi;
 std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<HeadUnitProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> huProxy;
 std::mutex _metaMutex;
 std::atomic<bool> _lightmode(true);
-std::atomic<bool> _metaUpdated(true);
+std::atomic<bool> _metaUpdated(false);
 HeadUnit::MetaData _metadata;
 
 struct metadata {
@@ -66,6 +66,7 @@ void subscribe_theme()
 		std::cout << "Theme changed. LightMode? " << val << std::endl;
 		_lightmode = val;
 	});
+	std::cout << "Theme subscribed" << std::endl;
 }
 
 EXPORT
@@ -73,12 +74,14 @@ void subscribe_metadata()
 {
 	huProxy->getMetadataAttribute().getChangedEvent().subscribe([&](const HeadUnit::MetaData& _val){
 		std::cout << "New metadata" << std::endl;
+		if (!_val.getAlbumcover().empty())
 		{
 			std::lock_guard<std::mutex> lock(_metaMutex);
 			_metadata = _val;
 			_metaUpdated = true;
 		}
 	});
+	std::cout << "Metadata subscribed" << std::endl;
 }
 
 EXPORT
