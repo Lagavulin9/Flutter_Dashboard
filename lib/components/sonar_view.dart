@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dashboard/components/arc_painter.dart';
 import 'package:flutter_dashboard/providers/control_provider.dart';
 import 'package:flutter_dashboard/providers/sonar_provider.dart';
-import 'dart:math' as math;
 
 class SonarView extends StatelessWidget {
   const SonarView({required this.sonarModel, required this.controlModel});

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dashboard/components/album_cover.dart';
 import 'package:flutter_dashboard/components/alerts.dart';
-import 'package:flutter_dashboard/components/arc_painter.dart';
 import 'package:flutter_dashboard/components/battery.dart';
 import 'package:flutter_dashboard/components/clock.dart';
 import 'package:flutter_dashboard/components/gears.dart';
