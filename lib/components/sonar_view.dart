@@ -20,7 +20,7 @@ class SonarView extends StatelessWidget {
                   width: 80,
                   height: 80,
                   child: Image.asset(
-                    'assets/top_view.png',
+                    'assets/rear.png',
                     fit: BoxFit.scaleDown,
                   )),
               CustomPaint(
@@ -36,7 +36,7 @@ class SonarView extends StatelessWidget {
                   width: 80,
                   height: 80,
                   child: Image.asset(
-                    'assets/top_view.png',
+                    'assets/front.png',
                     fit: BoxFit.scaleDown,
                   )),
             ],
