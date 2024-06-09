@@ -19,7 +19,6 @@ import 'package:flutter_dashboard/providers/sonar_provider.dart';
 import 'package:flutter_dashboard/providers/speed_provider.dart';
 import 'package:flutter_dashboard/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'dart:math' as math;
 
 const double displayWidth = 1280;
 const double displayHeight = 400;
@@ -107,16 +106,16 @@ class Dashboard extends StatelessWidget {
                               height: 240, child: Center(child: Speedometer())),
                           SizedBox(
                               height: 240,
-                              child: Center(
-                                  child: Consumer2<SonarModel, ControlModel>(
-                                builder: (context, sonar, control, child) =>
-                                    // TODO: need to set priorities of showing widgets
-                                    sonar.tooClose
-                                        ? SonarView(
-                                            sonarModel: sonar,
-                                            controlModel: control)
-                                        : const AlbumCover(),
-                              )))
+                              child: Center(child:
+                                  Consumer2<SonarModel, ControlModel>(builder:
+                                      (context, sonar, control, child) {
+                                if (control.gear == "R" || sonar.tooClose) {
+                                  return SonarView(
+                                      sonarModel: sonar, controlModel: control);
+                                } else {
+                                  return const AlbumCover();
+                                }
+                              })))
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 50, child: Center(child: VolCur())),

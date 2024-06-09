@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dashboard/providers/sonar_provider.dart';
 
 class ArcPainter extends CustomPainter {
-  const ArcPainter({required this.offsetAngle, required this.model});
-  final double offsetAngle;
+  const ArcPainter({required this.model, this.rear = false});
+  final bool rear;
   final SonarModel model;
 
   @override
@@ -17,7 +17,7 @@ class ArcPainter extends CustomPainter {
         (index) =>
             Offset(offsets[index], offsets[index]) &
             Size(sizes[index], sizes[index]));
-    var distance = 100;
+    var distance = rear ? model.rear : model.front;
     for (int i = 0; i < offsetsAndSizes.length; i++) {
       var color = i == 0 && distance < 30
           ? Colors.red
@@ -28,7 +28,7 @@ class ArcPainter extends CustomPainter {
                   : Colors.amber;
       canvas.drawArc(
         offsetsAndSizes[i],
-        offsetAngle,
+        rear ? math.pi / 4 : 5 * math.pi / 4,
         math.pi / 2,
         false,
         Paint()
