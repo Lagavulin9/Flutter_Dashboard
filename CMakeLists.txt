@@ -36,3 +36,10 @@ target_link_libraries(CarInfo-someip CommonAPI CommonAPI-SomeIP)
 FILE(GLOB HEADUNIT_LIB_SRCS ./lib/ffi/src-gen/someip/v0/commonapi/HeadUnit*.cpp)
 add_library(HeadUnit-someip SHARED ${HEADUNIT_LIB_SRCS})
 target_link_libraries(HeadUnit-someip CommonAPI CommonAPI-SomeIP)
+
+# Include GNUInstallDirs to use standard install directories
+include(GNUInstallDirs)
+
+# Install libraries
+install(TARGETS myffi CanTransceiver-someip CarControl-someip CarInfo-someip HeadUnit-someip
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
