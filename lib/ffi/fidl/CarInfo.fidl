@@ -1,0 +1,13 @@
+package commonapi
+
+interface CarInfo {
+    version { major 0 minor 1 }
+    attribute batteryStruct battery readonly
+
+    struct batteryStruct {
+        Float level
+        Float consumption
+        Float current
+        Float voltage
+    }
+}

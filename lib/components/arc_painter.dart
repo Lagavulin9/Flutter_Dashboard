@@ -3,63 +3,93 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dashboard/providers/sonar_provider.dart';
 
 class ArcPainter extends CustomPainter {
-  const ArcPainter({required this.model});
+  const ArcPainter({required this.model, this.rear = false});
+  final bool rear;
   final SonarModel model;
 
   @override
   void paint(Canvas canvas, Size size) {
-    var setProperties = [
-      {
-        'startAngle': -4 * math.pi / 24,
-        'sweepAngle': -4 * math.pi / 24,
-        'area': 'right',
-      },
-      {
-        'startAngle': -9 * math.pi / 24,
-        'sweepAngle': -6 * math.pi / 24,
-        'area': 'middle',
-      },
-      {
-        'startAngle': -16 * math.pi / 24,
-        'sweepAngle': -4 * math.pi / 24,
-        'area': 'left',
-      },
-    ];
-
-    for (var setProps in setProperties) {
-      const factor = 2.0;
-      final sizes = [100, 75, 50].map((e) => e * factor).toList();
-      final offsets = List.generate(sizes.length, (index) => -sizes[index] / 2);
-      final offsetsAndSizes = List.generate(
-          sizes.length,
-          (index) =>
-              Offset(offsets[index], offsets[index]) &
-              Size(sizes[index], sizes[index]));
-      var distance = setProps['area'] == 'left'
-          ? model.left
-          : setProps['area'] == 'middle'
-              ? model.middle
-              : model.right;
-      for (int i = 0; i < offsetsAndSizes.length; i++) {
-        var color = i == 0 && distance <= 30
-            ? Colors.red
-            : i == 1 && distance <= 20
-                ? Colors.red
-                : i == 2 && distance <= 10
-                    ? Colors.red
-                    : Colors.amber;
-        canvas.drawArc(
-          offsetsAndSizes[i],
-          setProps['startAngle']! as double,
-          setProps['sweepAngle']! as double,
-          false,
-          Paint()
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 5 * factor
-            ..color = color,
-        );
-      }
+    const factor = 2.0;
+    final sizes = [100, 75, 50].map((e) => e * factor).toList();
+    final offsets = List.generate(sizes.length, (index) => -sizes[index] / 2);
+    final offsetsAndSizes = List.generate(
+        sizes.length,
+        (index) =>
+            Offset(offsets[index], offsets[index]) &
+            Size(sizes[index], sizes[index]));
+    var distance = rear ? model.rear : model.front;
+    for (int i = 0; i < offsetsAndSizes.length; i++) {
+      var color = i == 0 && distance < 30
+          ? Colors.red
+          : i == 1 && distance <= 15
+              ? Colors.red
+              : i == 2 && distance <= 5
+                  ? Colors.red
+                  : Colors.amber;
+      canvas.drawArc(
+        offsetsAndSizes[i],
+        rear ? math.pi / 4 : 5 * math.pi / 4,
+        math.pi / 2,
+        false,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 5 * factor
+          ..color = color,
+      );
     }
+
+    // var setProperties = [
+    //   {
+    //     'startAngle': -4 * math.pi / 24,
+    //     'sweepAngle': -4 * math.pi / 24,
+    //     'area': 'right',
+    //   },
+    //   {
+    //     'startAngle': -9 * math.pi / 24,
+    //     'sweepAngle': -6 * math.pi / 24,
+    //     'area': 'middle',
+    //   },
+    //   {
+    //     'startAngle': -16 * math.pi / 24,
+    //     'sweepAngle': -4 * math.pi / 24,
+    //     'area': 'left',
+    //   },
+    // ];
+
+    // for (var setProps in setProperties) {
+    //   const factor = 2.0;
+    //   final sizes = [100, 75, 50].map((e) => e * factor).toList();
+    //   final offsets = List.generate(sizes.length, (index) => -sizes[index] / 2);
+    //   final offsetsAndSizes = List.generate(
+    //       sizes.length,
+    //       (index) =>
+    //           Offset(offsets[index], offsets[index]) &
+    //           Size(sizes[index], sizes[index]));
+    //   var distance = setProps['area'] == 'left'
+    //       ? model.left
+    //       : setProps['area'] == 'middle'
+    //           ? model.middle
+    //           : model.right;
+    //   for (int i = 0; i < offsetsAndSizes.length; i++) {
+    //     var color = i == 0 && distance <= 30
+    //         ? Colors.red
+    //         : i == 1 && distance <= 20
+    //             ? Colors.red
+    //             : i == 2 && distance <= 10
+    //                 ? Colors.red
+    //                 : Colors.amber;
+    //     canvas.drawArc(
+    //       offsetsAndSizes[i],
+    //       setProps['startAngle']! as double,
+    //       setProps['sweepAngle']! as double,
+    //       false,
+    //       Paint()
+    //         ..style = PaintingStyle.stroke
+    //         ..strokeWidth = 5 * factor
+    //         ..color = color,
+    //     );
+    //   }
+    // }
 
     // canvas.drawArc(Offset(-50, -50) & Size(100, 100), -4 * math.pi / 24,
     //     -4 * math.pi / 24, false, paint1);

@@ -22,11 +22,11 @@ void buildSpeedSensorProxy()
 	std::string connection = "client-sample";
 
 	ssProxy = runtime->buildProxyWithDefaultAttributeExtension<SpeedSensorProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
-	std::cout << "Waiting for service to become available." << std::endl;
-	while (!ssProxy->isAvailable()) {
-		std::this_thread::sleep_for(std::chrono::microseconds(10));
-	}
-	std::cout << "SpeedSensor service is available" << std::endl;
+	// std::cout << "Waiting for service to become available." << std::endl;
+	// while (!ssProxy->isAvailable()) {
+	// 	std::this_thread::sleep_for(std::chrono::microseconds(10));
+	// }
+	// std::cout << "SpeedSensor service is available" << std::endl;
 
 	// initialize value
 	CommonAPI::CallStatus callStatus;

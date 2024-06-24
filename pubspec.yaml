@@ -68,7 +68,8 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/unknown-album.png
-    - assets/top_view.png
+    - assets/front.png
+    - assets/rear.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

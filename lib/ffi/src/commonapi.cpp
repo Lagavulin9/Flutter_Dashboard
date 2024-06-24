@@ -10,11 +10,10 @@
 
 std::shared_ptr<CommonAPI::Runtime> runtime;
 
-void buildSpeedSensorProxy(void);
+void buildCanTransceiverProxy(void);
 void buildCarControlProxy(void);
 void buildCarInfoProxy(void);
 void buildHeadUnitProxy(void);
-void buildPDCProxy(void);
 
 EXPORT
 void init()
@@ -24,13 +23,11 @@ void init()
 	CommonAPI::Runtime::setProperty("LogContext", "InstrumentCluster");
 	CommonAPI::Runtime::setProperty("LogApplication", "InstrumentCluster");
 
-	buildSpeedSensorProxy();
+	buildCanTransceiverProxy();
 
 	buildCarControlProxy();
 
 	buildCarInfoProxy();
 
 	buildHeadUnitProxy();
-
-	buildPDCProxy();
 }

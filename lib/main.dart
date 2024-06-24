@@ -105,12 +105,16 @@ class Dashboard extends StatelessWidget {
                               height: 240, child: Center(child: Speedometer())),
                           SizedBox(
                               height: 240,
-                              child: Center(
-                                  child: Consumer<SonarModel>(
-                                      builder: (context, model, child) =>
-                                          model.tooClose
-                                              ? SonarView(model: model)
-                                              : const AlbumCover())))
+                              child: Center(child:
+                                  Consumer2<SonarModel, ControlModel>(builder:
+                                      (context, sonar, control, child) {
+                                if (control.gear == "R" || sonar.tooClose) {
+                                  return SonarView(
+                                      sonarModel: sonar, controlModel: control);
+                                } else {
+                                  return const AlbumCover();
+                                }
+                              })))
                         ]),
                         const TableRow(children: [
                           SizedBox(height: 50, child: Center(child: VolCur())),

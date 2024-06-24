@@ -13,7 +13,7 @@ using namespace v0::commonapi;
 std::shared_ptr<typename CommonAPI::DefaultAttributeProxyHelper<HeadUnitProxy, CommonAPI::Extensions::AttributeCacheExtension>::class_t> huProxy;
 std::mutex _metaMutex;
 std::atomic<bool> _lightmode(true);
-std::atomic<bool> _metaUpdated(true);
+std::atomic<bool> _metaUpdated(false);
 HeadUnit::MetaData _metadata;
 
 struct metadata {
@@ -32,31 +32,31 @@ void buildHeadUnitProxy()
 	std::string connection = "client-sample";
 
 	huProxy = runtime->buildProxyWithDefaultAttributeExtension<HeadUnitProxy, CommonAPI::Extensions::AttributeCacheExtension>(domain, instance, connection);
-	std::cout << "Waiting for service to become available." << std::endl;
-	while (!huProxy->isAvailable()) {
-		std::this_thread::sleep_for(std::chrono::microseconds(10));
-	}
-	std::cout << "HeadUnit service is available" << std::endl;
+	// std::cout << "Waiting for service to become available." << std::endl;
+	// while (!huProxy->isAvailable()) {
+	// 	std::this_thread::sleep_for(std::chrono::microseconds(10));
+	// }
+	// std::cout << "HeadUnit service is available" << std::endl;
 
 	// initialize value
-	CommonAPI::CallStatus callStatus;
-	CommonAPI::CallInfo info(1000);
-	info.sender_ = 5678;
+	// CommonAPI::CallStatus callStatus;
+	// CommonAPI::CallInfo info(1000);
+	// info.sender_ = 5678;
 
-	bool response;
-	huProxy->getLightModeAttribute().getValue(callStatus, response, &info);
-	if (callStatus != CommonAPI::CallStatus::SUCCESS) {
-		std::cerr << "Remote call A failed!\n";
-		return;
-	}
-	std::cout << "Got attribute value: " << response << std::endl;
-	_lightmode = response;
+	// bool response;
+	// huProxy->getLightModeAttribute().getValue(callStatus, response, &info);
+	// if (callStatus != CommonAPI::CallStatus::SUCCESS) {
+	// 	std::cerr << "Remote call A failed!\n";
+	// 	return;
+	// }
+	// std::cout << "Got attribute value: " << response << std::endl;
+	// _lightmode = response;
 
-	huProxy->getMetadataAttribute().getValue(callStatus, _metadata, &info);
-	if (callStatus != CommonAPI::CallStatus::SUCCESS) {
-		std::cerr << "Remote call A failed!\n";
-		return;
-	}
+	// huProxy->getMetadataAttribute().getValue(callStatus, _metadata, &info);
+	// if (callStatus != CommonAPI::CallStatus::SUCCESS) {
+	// 	std::cerr << "Remote call A failed!\n";
+	// 	return;
+	// }
 }
 
 EXPORT
@@ -66,6 +66,7 @@ void subscribe_theme()
 		std::cout << "Theme changed. LightMode? " << val << std::endl;
 		_lightmode = val;
 	});
+	std::cout << "Theme subscribed" << std::endl;
 }
 
 EXPORT
@@ -73,12 +74,14 @@ void subscribe_metadata()
 {
 	huProxy->getMetadataAttribute().getChangedEvent().subscribe([&](const HeadUnit::MetaData& _val){
 		std::cout << "New metadata" << std::endl;
+		if (!_val.getAlbumcover().empty())
 		{
 			std::lock_guard<std::mutex> lock(_metaMutex);
 			_metadata = _val;
 			_metaUpdated = true;
 		}
 	});
+	std::cout << "Metadata subscribed" << std::endl;
 }
 
 EXPORT
